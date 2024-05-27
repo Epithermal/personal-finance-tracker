@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/css/tailwind.css" rel="stylesheet">
+  <title>Dashboard</title>
+</head>
+<body class="bg-gray-100">
+  <%- include('partials/header') %>
+  <div class="container mx-auto px-4">
+    <h1 class="text-4xl font-bold text-center my-8">Dashboard</h1>
+    <div class="mb-8">
+      <h2 class="text-2xl font-semibold">Add Transaction</h2>
+      <form action="/transaction" method="POST" class="max-w-md mx-auto bg-white p-8 rounded shadow-md">
+        <div class="mb-4">
+          <label class="block text-gray-700">Type</label>
+          <select name="type" class="w-full border border-gray-300 rounded py-2 px-3">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">Category</label>
+          <select name="category" class="w-full border border-gray-300 rounded py-2 px-3">
+            <% categories.forEach(category => { %>
+              <option value="<%= category._id %>"><%= category.name %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">Amount</label>
+          <input type="number" name="amount" class="w-full border border-gray-300 rounded py-2 px-3" required>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">Recurring</label>
+          <input type="checkbox" name="recurring" class="w-full border border-gray-300 rounded py-2 px-3">
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">Recurring Interval</label>
+          <select name="recurringInterval" class="w-full border border-gray-300 rounded py-2 px-3">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-full">Add Transaction</button>
+      </form>
+    </div>
+    <div>
+      <h2 class="text-2xl font-semibold">Transactions</h2>
+      <table class="min-w-full bg-white rounded shadow-md">
+        <thead>
+          <tr>
+            <th class="py-2 px-4">Type</th>
+            <th class="py-2 px-4">Category</th>
+            <th class="py-2 px-4">Amount</th>
+            <th class="py-2 px-4">Date</th>
+            <th class="py-2 px-4">Recurring</th>
+            <th class="py-2 px-4">Interval</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% transactions.forEach(transaction => { %>
+            <tr>
+              <td class="py-2 px-4"><%= transaction.type %></td>
+              <td class="py-2 px-4"><%= transaction.category.name %></td>
+              <td class="py-2 px-4"><%= transaction.amount %></td>
+              <td class="py-2 px-4"><%= transaction.date.toDateString() %></td>
+              <td class="py-2 px-4"><%= transaction.recurring ? 'Yes' : 'No' %></td>
+              <td class="py-2 px-4"><%= transaction.recurringInterval %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

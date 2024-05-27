@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/css/tailwind.css" rel="stylesheet">
+  <title>Profile</title>
+</head>
+<body class="bg-gray-100">
+  <%- include('partials/header') %>
+  <div class="container mx-auto px-4">
+    <h1 class="text-4xl font-bold text-center my-8">Profile</h1>
+    <form action="/profile" method="POST" class="max-w-md mx-auto bg-white p-8 rounded shadow-md">
+      <div class="mb-4">
+        <label class="block text-gray-700">Username</label>
+        <input type="text" name="username" value="<%= user.username %>" class="w-full border border-gray-300 rounded py-2 px-3" required>
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700">Email</label>
+        <input type="email" name="email" value="<%= user.email %>" class="w-full border border-gray-300 rounded py-2 px-3" required>
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700">Password (leave blank to keep current password)</label>
+        <input type="password" name="password" class="w-full border border-gray-300 rounded py-2 px-3">
+      </div>
+      <button type="submit" class="btn btn-primary w-full">Update Profile</button>
+    </form>
+  </div>
+</body>
+</html>

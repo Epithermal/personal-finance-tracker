@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/css/tailwind.css" rel="stylesheet">
+  <title>Login</title>
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto px-4">
+    <h1 class="text-4xl font-bold text-center my-8">Login</h1>
+    <form action="/login" method="POST" class="max-w-md mx-auto bg-white p-8 rounded shadow-md">
+      <div class="mb-4">
+        <label class="block text-gray-700">Username</label>
+        <input type="text" name="username" class="w-full border border-gray-300 rounded py-2 px-3" required>
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700">Password</label>
+        <input type="password" name="password" class="w-full border border-gray-300 rounded py-2 px-3" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-full">Login</button>
+    </form>
+  </div>
+</body>
+</html>

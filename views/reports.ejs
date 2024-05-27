@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="/css/tailwind.css" rel="stylesheet">
+  <title>Reports</title>
+  <style>
+    .chart-container {
+      position: relative;
+      height: 400px;
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <%- include('partials/header') %>
+  <div class="container mx-auto px-4">
+    <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold text-center my-4 md:my-6 lg:my-8">Reports</h1>
+
+    <div class="mb-8">
+      <h2 class="text-xl md:text-2xl lg:text-3xl font-semibold">Transactions Summary</h2>
+      <div class="chart-container">
+        <canvas id="transactionsChart" class="w-full"></canvas>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <h2 class="text-xl md:text-2xl lg:text-3xl font-semibold">Expenses by Category</h2>
+      <div class="chart-container">
+        <canvas id="expensesChart" class="w-full"></canvas>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <h2 class="text-xl md:text-2xl lg:text-3xl font-semibold">Income by Category</h2>
+      <div class="chart-container">
+        <canvas id="incomeChart" class="w-full"></canvas>
+      </div>
+    </div>
+
+    <div class="mb-8">
+      <h2 class="text-xl md:text-2xl lg:text-3xl font-semibold">Expenses by Month</h2>
+      <div class="chart-container">
+        <canvas id="monthlyExpensesChart" class="w-full"></canvas>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const transactions = <%- JSON.stringify(transactions) %>;
+    
+    // Calculate total income and expenses
+    const incomeData = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
+    const expenseData = transactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + t.amount, 0);
+    
+    // Transactions Summary Chart
+    const ctx1 = document.getElementById('transactionsChart').getContext('2d');
+    new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+            labels: ['Income', 'Expenses'],
+            datasets: [{
+                data: [incomeData, expenseData],
+                backgroundColor: ['#4caf50', '#f44336'],
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        },
+    });
+
+    // Calculate expenses by category
+    const categoryExpenses = {};
+    transactions.filter(t => t.type === 'expense').forEach(t => {
+        categoryExpenses[t.category.name] = (categoryExpenses[t.category.name] || 0) + t.amount;
+    });
+    
+    // Expenses by Category Chart
+    const ctx2 = document.getElementById('expensesChart').getContext('2d');
+    new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(categoryExpenses),
+            datasets: [{
+                label: 'Expenses',
+                data: Object.values(categoryExpenses),
+                backgroundColor: '#f44336',
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        },
+    });
+    
+    // Calculate income by category
+    const categoryIncome = {};
+    transactions.filter(t => t.type === 'income').forEach(t => {
+        categoryIncome[t.category.name] = (categoryIncome[t.category.name] || 0) + t.amount;
+    });
+    
+    // Income by Category Chart
+    const ctx3 = document.getElementById('incomeChart').getContext('2d');
+    new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(categoryIncome),
+            datasets: [{
+                label: 'Income',
+                data: Object.values(categoryIncome),
+                backgroundColor: '#4caf50',
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        },
+    });
+    
+    // Calculate monthly expenses
+    const monthlyExpenses = {};
+    transactions.filter(t => t.type === 'expense').forEach(t => {
+        const month = new Date(t.date).toLocaleString('default', { month: 'long' });
+        monthlyExpenses[month] = (monthlyExpenses[month] || 0) + t.amount;
+    });
+    
+    // Expenses by Month Chart
+    const ctx4 = document.getElementById('monthlyExpensesChart').getContext('2d');
+    new Chart(ctx4, {
+        type: 'line',
+        data: {
+            labels: Object.keys(monthlyExpenses),
+            datasets: [{
+                label: 'Expenses',
+                data: Object.values(monthlyExpenses),
+                backgroundColor: '#f44336',
+                borderColor: '#f44336',
+                fill: false,
+            }],
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+        },
+    });
+  </script>
+</body>
+</html>
